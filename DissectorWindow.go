@@ -474,17 +474,17 @@ func NewDissectorWindow() (*gtk.Window, error) {
 		}
 	})
 
-	bettercapItem, err := winBuilder.GetObject("frombettercapitem")
+	nfqueueItem, err := winBuilder.GetObject("fromnfqueueitem")
 	if err != nil {
 		return nil, err
 	}
-	bettercapMenuItem, ok := bettercapItem.(*gtk.MenuItem)
+	nfqueueMenuItem, ok := nfqueueItem.(*gtk.MenuItem)
 	if !ok {
-		return nil, invalidUi("bettercapmenuitem")
+		return nil, invalidUi("nfqueuemenuitem")
 	}
-	bettercapMenuItem.Connect("activate", func() {
+	nfqueueMenuItem.Connect("activate", func() {
 		ctx, cancelFunc := context.WithCancel(context.Background())
-		session, err := NewCaptureSession("<BETTERCAP>", cancelFunc, func(session *CaptureSession, listViewer *PacketListViewer, err error) {
+		session, err := NewCaptureSession("<NFQUEUE>", cancelFunc, func(session *CaptureSession, listViewer *PacketListViewer, err error) {
 			if err != nil {
 				dwin.ShowCaptureError(err, "Accepting new listviewer")
 				return
@@ -499,11 +499,11 @@ func NewDissectorWindow() (*gtk.Window, error) {
 			listViewer.mainWidget.SetWideHandle(true)
 		})
 		if err != nil {
-			dwin.ShowCaptureError(err, "Starting bettercap proxy")
+			dwin.ShowCaptureError(err, "Starting nfqueue proxy")
 		}
-		err = CaptureFromBettercap(ctx, session)
+		err = CaptureFromNFQueue(ctx, session)
 		if err != nil {
-			dwin.ShowCaptureError(err, "Starting bettercap proxy")
+			dwin.ShowCaptureError(err, "Starting nfqueue proxy")
 		}
 	})
 

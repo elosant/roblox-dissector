@@ -43,10 +43,10 @@
                         <property name="label" translatable="yes">From WinDivert proxy</property>
                         <property name="use_underline">True</property>
                       </object>
-                      <object class="GtkMenuItem" id="frombettercapitem">
+                      <object class="GtkMenuItem" id="fromnfqueueitem">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">From bettercap proxy</property>
+                        <property name="label" translatable="yes">From nfqueue proxy</property>
                         <property name="use_underline">True</property>
                       </object>
                     </child>
