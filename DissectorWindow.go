@@ -474,6 +474,39 @@ func NewDissectorWindow() (*gtk.Window, error) {
 		}
 	})
 
+	bettercapItem, err := winBuilder.GetObject("frombettercapitem")
+	if err != nil {
+		return nil, err
+	}
+	bettercapMenuItem, ok := bettercapItem.(*gtk.MenuItem)
+	if !ok {
+		return nil, invalidUi("bettercapmenuitem")
+	}
+	bettercapMenuItem.Connect("activate", func() {
+		ctx, cancelFunc := context.WithCancel(context.Background())
+		session, err := NewCaptureSession("<BETTERCAP>", cancelFunc, func(session *CaptureSession, listViewer *PacketListViewer, err error) {
+			if err != nil {
+				dwin.ShowCaptureError(err, "Accepting new listviewer")
+				return
+			}
+
+			listViewer.mainWidget.ShowAll()
+			dwin.AppendClosablePage(listViewer.title, session, listViewer)
+
+			windowHeight := dwin.GetAllocatedHeight()
+			paneHeight := int(0.6 * float64(windowHeight))
+			listViewer.mainWidget.SetPosition(paneHeight)
+			listViewer.mainWidget.SetWideHandle(true)
+		})
+		if err != nil {
+			dwin.ShowCaptureError(err, "Starting bettercap proxy")
+		}
+		err = CaptureFromBettercap(ctx, session)
+		if err != nil {
+			dwin.ShowCaptureError(err, "Starting bettercap proxy")
+		}
+	})
+
 	aboutDialogItem, err := winBuilder.GetObject("aboutitem")
 	if err != nil {
 		return nil, err
